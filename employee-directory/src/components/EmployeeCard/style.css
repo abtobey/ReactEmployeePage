@@ -1,3 +1,19 @@
 .employeeItem:nth-of-type(odd){
-    background-color:gray;
+    background-color:#DDDDDD;
+}
+.employeeItem:nth-of-type(even){
+    background-color:#CCCCCC;
+}
+
+.employeeItem{
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align:center;
+    top:50%;
+}
+
+.col-2, .col-3{
+    border: 1 px black;
 }

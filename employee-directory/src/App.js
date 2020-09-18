@@ -1,71 +1,77 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import EmployeeCard from './components/EmployeeCard';
 import Wrapper from './components/Wrapper';
 import Title from './components/Title';
 import SearchBar from './components/SearchBar'
 import API from './components/utils/API';
+// import employeeList from "./employees.json";
+import Header from './components/Header';
 
 
-class App extends React.Component {
-  state={
+function App() {
+  const [employeeState, setEmployeeState]= useState ({
     employees: [],
     searchValue: "",
-    ascending: true
-  }
- componentDidMount(){
+    ascending: false
+  });
+
+//this is for testing purposes so it doesn't call the API every time in development, don't forget to comment this out.
+  // useEffect(() => {
+  //   const empList=employeeList.results;
+  //   empList.sort((a, b) => {
+  //     return a.name.last  > b.name.last ? 1 : -1
+  //   })
+  //   setEmployeeState({...employeeState, employees: empList})
+  // },[])
+
+ useEffect(()=>{
     API.getUsers()
-    .then(res => this.setState({employees: res.data.results}))
+    .then(res => {
+    const empList=res.data.results;
+    empList.sort((a, b) => {
+      return a.name.last  > b.name.last ? 1 : -1
+    })
+      setEmployeeState({...employeeState,employees: empList})
+  })
     .catch(err => console.log(err))
- }
+ },[]);
 
-  filterSearch = (str) => {
-    this.setState({searchValue:str})
+   const filterSearch = (str) => {
+    setEmployeeState({...employeeState, searchValue:str})
   }
 
-  orderEmployees = () => {
-    if(this.state.ascending){
-      this.state.employees.sort((a, b) => {
+  const orderEmployees = () => {
+    if(employeeState.ascending){
+      employeeState.employees.sort((a, b) => {
         return a.name.last  > b.name.last ? 1 : -1
       })
     }else{
-      this.state.employees.sort((a, b) => {
+      employeeState.employees.sort((a, b) => {
         return a.name.last > b.name.last ? -1 : 1
         
       })
     }
-    this.setState({ascending: !this.state.ascending})
+    setEmployeeState({...employeeState, ascending: !employeeState.ascending})
   }
 
+  const clearSearch = (event) => {
+    event.preventDefault();
+    setEmployeeState({ ...employeeState, searchValue: ""})
+  }
 
-  render(){
   return (
-    <Wrapper>
-      <Title>Employee List</Title>
-      
+    <>
+      <Title>Employee Directory</Title>
+      <Wrapper> 
       <main className="container">
-      <SearchBar filterSearch={this.filterSearch}/>
-      <div className="row">
-      <div className="img-container col-2" >
-        Image
-      </div>
-      <div className="col-3" onClick = {() => this.orderEmployees()}>
-          Name
-      </div>
-      <div className="col-2">
-        Phone
-      </div>
-      <div className="col-3">
-         Email
-        </div>
-      <div className="col-2">
-         DOB
-        </div>
-    </div>
-      {this.state.employees.filter(item => item.name.first.startsWith(this.state.searchValue) || item.name.last.startsWith(this.state.searchValue)).map((employee) => (<EmployeeCard key={employee.id.value} name={employee.name.first + " " + employee.name.last} image={employee.picture.medium} email={employee.email} phone={employee.cell} dob={employee.dob.date} />))}
+      <SearchBar filterSearch={filterSearch} clearSearch={clearSearch} str={employeeState.searchValue}/>
+    <Header orderEmployees={orderEmployees} direction={employeeState.ascending}/>
+      {employeeState.employees.filter(item => item.name.first.includes(employeeState.searchValue) || item.name.last.includes(employeeState.searchValue)).map((employee) => (<EmployeeCard key={employee.id.value} name={employee.name.first + " " + employee.name.last} image={employee.picture.medium} email={employee.email} phone={employee.cell} dob={employee.dob.date} />))}
       </main>
     </Wrapper>
+    </>
   );
-  }
+
 }
 
 export default App;
