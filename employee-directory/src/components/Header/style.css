@@ -16,6 +16,8 @@
   .up {
     transform: rotate(-135deg);
     -webkit-transform: rotate(-135deg);
+    vertical-align:20%;
+
   }
   
   .down {
