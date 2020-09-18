@@ -19,6 +19,8 @@ no installation is required to use the app on Github Pages. To make edits to the
 
 Type in a substring in the search bar to search by name. The search will find either first or last, for example, typing in An would return both Andrew Wilson and Tony Anderson. The Name header can also be clicked to switch between ascending and descending alphabetical order. 
 
+![empDir](https://user-images.githubusercontent.com/65990371/93651781-586cd100-f9d8-11ea-96c5-52447a9c7b46.PNG)
+
 ---
 
 
